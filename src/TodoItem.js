@@ -7,7 +7,31 @@ class TodoItem extends React.Component{
 		const { deleteItem, index } = this.props
 		deleteItem(index)
 		// this.props.deleteItem(this.props.index)
-	}
+    }
+
+    /*
+        react中，父组件数据发生改变之后，会更新render函数中的内容
+        在父组件render函数调用之后，子组件的render也会跟着一起更新
+        如果父组件频繁更新，子组件不更新的话，就会损耗性能
+
+        shouldComponentUpdate 可以理解为询问子组件是否更新
+        nextProps:接下来的我的props会变化成什么样子
+        nextState：接下来我的State会变化成什么样子
+
+        如果接下来props中的content和父组件传递过来的props不相等，那么子组件就不让它更新
+    */
+    shouldComponentUpdate(nextProps,nextState){
+        if(nextProps.content !== this.props.content){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+
+
 	render(){
 		// 可以使用es6的这种写法，来简化代码
 		const { content , test } = this.props

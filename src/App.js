@@ -1,10 +1,6 @@
-import React, {
-    Component,
-    Fragment
-} from 'react';
+import React, { Component,Fragment } from 'react';
 import TodoItem from './TodoItem';
-
-
+import axios from 'axios'
 
 
 class TodoList extends Component {
@@ -18,7 +14,12 @@ class TodoList extends Component {
 
     handleInput=(e)=>{
         // 在react16中setState需要修改成函数的形式,直接获取或报错，后期会修改
-        const value = e.target.value
+        // const value = e.target.value
+
+        //ref来获取真实dom的value，这个语法可以替换e.target.value，不推荐使用
+        //console.log(this.input.value)
+        const value = this.input.value
+
         this.setState(()=>({
             inputValue: value
         }))
@@ -34,7 +35,13 @@ class TodoList extends Component {
         this.setState((prevState)=>({
             list:[...prevState.list,prevState.inputValue],
             inputValue:''
-        }))
+        }),()=>{
+            //setState异步函数执行完成之后，才会调用的console
+            console.log("在setState回调后，调用的console",this.ul.querySelectorAll('li').length)
+        })
+
+        //获取元素节点的个数，这样打印出来的内容总会少一条，因为setState是异步的。
+        console.log("在setState外调用的console",this.ul.querySelectorAll('li').length)
 
         // this.setState({
         //     list:[...this.state.list,this.state.inputValue],
@@ -82,6 +89,14 @@ class TodoList extends Component {
         )
     }
 
+    componentDidMount(){
+        axios.get("api/todolist").then(()=>{
+            alert("jackwang")
+        }).catch(()=>{
+            alert("error")
+        })
+    }
+
 
     render() {
         return (
@@ -92,11 +107,12 @@ class TodoList extends Component {
                         id="insertvalue" 
                         onChange={this.handleInput} 
                         value={this.state.inputValue}
+                        ref={(input)=>{this.input = input}}
                     />
                    <button onClick={this.handleSubmit}>提交</button>
                 </div>
 
-                <ul>
+                <ul ref={(ul)=>{this.ul = ul}}>
                     {this.getTodoItem()}
                 </ul>
             </Fragment>
