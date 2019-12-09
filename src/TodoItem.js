@@ -28,10 +28,6 @@ class TodoItem extends React.Component{
         }
     }
 
-
-
-
-
 	render(){
 		// 可以使用es6的这种写法，来简化代码
 		const { content , test } = this.props
