@@ -1,12 +1,7 @@
 import React,{ Component } from 'react';
-import 'antd/dist/antd.css';
-import { Input,Button,List } from 'antd';
 import { getInputChangeAction, addTodoItem, deleteToDoItem } from "./store/actionCreators";
-
-
-
-
-
+import AppReduxUi from "./AppReduxUi";
+import axios from 'axios';
 //引入进来的store会自动调用reduer中的内容
 import store from './store'
 
@@ -23,30 +18,19 @@ class AppRedux extends Component{
     }
 
     render(){
-        return(
-            <div style={{marginTop:'10px',marginLeft:'10px'}}>
-                <div>
-                    <Input 
-                        value={this.state.inputValue} 
-                        placeholder="Basic usage" 
-                        style={{width:'300px',marginRight:'10px'}}
-                        onChange={this.handleInput}    
-                    />
-                    <Button 
-                        type="primary"
-                        onClick={this.handleButtonClick}
-                    >提交</Button>
-                </div>
+        return <AppReduxUi 
+                    inputValue={this.state.inputValue}
+                    list={this.state.list}
+                    handleInput={this.handleInput}
+                    handleButtonClick={this.handleButtonClick}
+                    handleDeleteItem={this.handleDeleteItem}
+            />
+    }
 
-                <List
-                    style={{marginTop:'10px',width:'320px'}}
-                    bordered
-                    dataSource={this.state.list}
-                    renderItem={(item,index) => (<List.Item onClick={()=>{this.handleDeleteItem(index)}}> {item}</List.Item>)}>
-
-                    </List>
-            </div>
-        )
+    componentDidMount(){
+        axios.get('http://localhost:3000/list.json').then(res=>{
+            console.log("res",res)
+        })
     }
 
     handleInput=(e)=>{
